@@ -21,6 +21,8 @@ var config = {
    
   function preload() {}
    
-  function create() {}
+  function create() {
+    this.socket = io();
+  }
    
   function update() {}
