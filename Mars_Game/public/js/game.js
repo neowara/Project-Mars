@@ -19,10 +19,22 @@ var config = {
    
   var game = new Phaser.Game(config);
    
-  function preload() {}
+  function preload() {	
+    this.load.image('ship1', 'assets/PNG/playerShip1_blue.png');
+  }
    
   function create() {
+    var self = this;
     this.socket = io();
+    this.socket.on('currentPlayers', function (players) {
+      Object.keys(players).forEach(function (id) {
+        if (players[id].playerId === self.socket.id) {
+          addPlayer(self, players[id]);
+        }
+      });
+    });
   }
    
   function update() {}
+
+  
