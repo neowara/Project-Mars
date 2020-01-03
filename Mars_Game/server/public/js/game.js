@@ -19,12 +19,26 @@ function preload() {
 function create() {
   var self = this;
   this.socket = io();
-  this.players = this.add.group();
+  this.players = this.physics.add.group();
 
   this.socket.on('currentPlayers', function (players) {
     Object.keys(players).forEach(function (id) {
       if (players[id].playerId === self.socket.id) {
         displayPlayers(self, players[id], 'ship');
+      } else {
+        displayPlayers(self, players[id], 'otherPlayer');
+      }
+    });
+  });
+
+  this.socket.on('newPlayer', function (playerInfo) {
+    displayPlayers(self, playerInfo, 'otherPlayer');
+  });
+
+  this.socket.on('disconnect', function (playerId) {
+    self.players.getChildren().forEach(function (player) {
+      if (playerId === player.playerId) {
+        player.destroy();
       }
     });
   });
